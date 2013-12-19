@@ -71,11 +71,11 @@ Single Point of Entry
 
 As in "Console API"
 
-	!sh
-	paver bootstrap
-	paver prepare
-	paver run
-
+```sh
+paver bootstrap
+paver prepare
+paver run
+```
 
 -------------------------------------
 
@@ -83,13 +83,14 @@ Getting started (First Task!)
 =====================================
 
 `pavement.py`:
-	
-	!python
-	from paver.easy import *
 
-	@task
-	def install_dependencies():
-		sh('pip install --upgrade -r requirements.txt')
+```python
+from paver.easy import *
+
+@task
+def install_dependencies():
+    sh('pip install --upgrade -r requirements.txt')
+```
 
 
 -------------------------------------
@@ -99,11 +100,12 @@ Embrace distutils/setuptools
 =====================================
 
 
-	!python
-	from paver.easy import *
-	from paver.setuputils import setup
+```python
+from paver.easy import *
+from paver.setuputils import setup
 
-	setup(**same_args_as_in_setup)
+setup(**same_args_as_in_setup)
+```
 
 -------------------------------------
 
@@ -123,12 +125,13 @@ setup.py compatibility
 Dependencies
 =====================================
 
-	!python
-	@task
-	@needs('install_dependencies')
-	def prepare():
-		""" Prepare complete environment """
-		sh("python setup.py develop")
+```python
+@task
+@needs('install_dependencies')
+def prepare():
+    """ Prepare complete environment """
+    sh("python setup.py develop")
+```
 
 -------------------------------------
 
@@ -137,26 +140,27 @@ Dependencies
 Overwriting distutils commands
 =====================================
 
-	!python
-	@task
-	@needs('html', "minilib", "generate_setup", "distutils.command.sdist")
-	def sdist():
-		pass
-
+```python
+@task
+@needs('html', "minilib", "generate_setup", "distutils.command.sdist")
+def sdist():
+    pass
+```
 
 -------------------------------------
 
 Positional arguments
 =====================================
 
-	!python
-	@task
-	@consume_args
-	def unit(args):
-		import nose
-		nose.run_exit(
-			argv = ["nosetests"] + args
-		)
+```python
+@task
+@consume_args
+def unit(args):
+    import nose
+    nose.run_exit(
+        argv = ["nosetests"] + args
+    )
+```
 
 
 -------------------------------------
@@ -164,69 +168,73 @@ Positional arguments
 CMD options, GNU style
 =====================================
 
-	!python
-	@task
-	@cmdopts([
-		('domain-username=', 'd', 'Domain username'),
-		('upload-url=', 'u', 'URL to upload to')
-	])
-	@needs('download_diff_packages')
-	def upload_packages(options):
-		# censored
+```python
+@task
+@cmdopts([
+    ('domain-username=', 'd', 'Domain username'),
+    ('upload-url=', 'u', 'URL to upload to')
+])
+@needs('download_diff_packages')
+def upload_packages(options):
+    # censored
+```
 
 -------------------------------------
 
 Oh, options
 =====================================
 
-	!python
-	options(
-		minilib=Bunch(
-			extra_files=['doctools', 'virtual']
-		)
-	)
-	
+```python
+options(
+    minilib=Bunch(
+        extra_files=['doctools', 'virtual']
+    )
+)
+```
+
 -------------------------------------
 
 
 Options (cont.)
 =====================================
 
-	!python
-	# inside minilib task
-	options.get('extra_files', [])
-
+```python
+# inside minilib task
+options.get('extra_files', [])
+```
 
 -------------------------------------
 
 Namespace search
 =====================================
 	
-	!python
-	options(setup=Bunch(version="1.1"))
-	options.version
-	'1.1'
-	options.order('minilib')
-	options.version
-	AttributeError: version
-
+```python
+options(setup=Bunch(version="1.1"))
+options.version
+'1.1'
+options.order('minilib')
+options.version
+AttributeError: version
+```
 
 -------------------------------------
 
 sh
 =====================================
 
-	!python
-	myval = sh("cat /etc/fstab", capture=True)
+```python
+myval = sh("cat /etc/fstab", capture=True)
+```
 
 -------------------------------------
 
 dry
 =====================================
 
-	!python
-	# prepare
-	dry("Modify", do_fs_mumbo_jumbo)
+```python
+# prepare
+dry("Modify", do_fs_mumbo_jumbo)
+```
 
 -------------------------------------
 
@@ -234,31 +242,34 @@ dry
 path.py 
 =====================================
 
-	!python
-	@task
-	def publish_docs():
-		builtdocs = path("docs") / options.sphinx.builddir / "html"
-		destdir = options.docroot
-		destdir.rmtree()
-		builtdocs.move(destdir)
+```python
+@task
+def publish_docs():
+    builtdocs = path("docs") / options.sphinx.builddir / "html"
+    destdir = options.docroot
+    destdir.rmtree()
+    builtdocs.move(destdir)
+```
 
 -------------------------------------
 
 Documentation (sphinx)
 =====================================
 
-	!python
-	options(
-		sphinx=Bunch(
-			builddir="build",
-			sourcedir="source"
-		)
-	)
+```python
+options(
+    sphinx=Bunch(
+        builddir="build",
+        sourcedir="source"
+    )
+)
+```
 
 And run
 
-	!sh
-	paver html
+```sh
+paver html
+```
 
 
 
@@ -267,21 +278,23 @@ And run
 Documentation (cog)
 =====================================
 
-	!python
-	#<== include('started/oldway/setup.py')==>
-	#<==end==>
+```python
+#<== include('started/oldway/setup.py')==>
+#<==end==>
+```
 
 configured with
 
-	!python
-	options(
-	    cog=Bunch(
-		includedir="docs/samples",
-		beginspec="<==",
-		endspec="==>",
-		endoutput="<==end==>"
-	    )
-	)
+```python
+options(
+    cog=Bunch(
+    includedir="docs/samples",
+    beginspec="<==",
+    endspec="==>",
+    endoutput="<==end==>"
+    )
+)
+```
 
 
 
@@ -293,16 +306,17 @@ Virtualenv
 =====================================
 
 
-	!python
-	options(
-		virtualenv=Bunch(
-			packages_to_install=["nose", "virtualenv"],
-			install_paver=True,
-			script_name='bootstrap.py',
-			paver_command_line=None,
-			dest_dir="virtualenv"
-		)
-	)
+```python
+options(
+    virtualenv=Bunch(
+        packages_to_install=["nose", "virtualenv"],
+        install_paver=True,
+        script_name='bootstrap.py',
+        paver_command_line=None,
+        dest_dir="virtualenv"
+    )
+)
+```
 
 -------------------------------------
 
@@ -315,18 +329,19 @@ Discovery
 Setting up django discovery
 =====================================
 	
-	!python
-	from paver.discovery import discover_django
+```python
+from paver.discovery import discover_django
 
-	options(
-		discovery = Bunch(
-			django = Bunch(
-				settings_path = "subdir"
-			)
-		)
-	)
+options(
+    discovery = Bunch(
+        django = Bunch(
+            settings_path = "subdir"
+        )
+    )
+)
 
-	discover_django(options)
+discover_django(options)
+```
 
 -------------------------------------
 
